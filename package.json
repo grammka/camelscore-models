@@ -1,0 +1,16 @@
+{
+  "name": "camelscore-models",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "camelscore": "^0.1.2"
+  },
+  "devDependencies": {}
+}
