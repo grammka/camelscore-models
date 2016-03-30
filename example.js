@@ -109,8 +109,6 @@ class Post extends CSM {
         },
       }
     };
-
-    return this.serialize(json);
   }
 }
 
