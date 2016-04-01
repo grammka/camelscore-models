@@ -1,5 +1,8 @@
 "use strict";
 
+import User from './models/User';
+
+
 var responseBody = {
   user_id: 1,
   user_name: "Pavel",
@@ -27,64 +30,4 @@ var responseBody = {
 };
 
 
-
-var serialize = require('./csm');
-
-var userConfig = {
-  fields: {
-    'user_id': {
-      to: 'id'
-    },
-    'user_name': {
-      to: 'name'
-    },
-    'user_avatar': {
-      to: 'avatar',
-      model: avatarConfig
-    },
-    'user_posts': {
-      to: 'posts',
-      model: postConfig
-    },
-  }
-};
-
-var avatarConfig = {
-  fields: {
-    'preview_url': {
-      to: 'url'
-    },
-    'size': {
-      model: sizeConfig
-    },
-  }
-};
-
-var sizeConfig = {
-  fields: {
-    'min_width': {
-      to: 'width'
-    },
-    'min_height': {
-      to: 'height'
-    },
-  }
-};
-
-var postConfig = {
-  fields: {
-    'post_id': {
-      to: 'id'
-    },
-    'user_id': {
-      to: 'userId'
-    },
-  }
-};
-
-
-
-var user = serialize.call(userConfig, responseBody);
-
-console.log('user result: ');
-console.log(user);
+console.log(User.serialize(responseBody));

@@ -1,54 +1,60 @@
 "use strict";
 
-exports = module.exports = function serialize(obj) {
-  let config = this;
-  let copy;
 
-  // Handle the 3 simple types, and null or undefined
-  if (obj == null || typeof obj != "object") {
-    return obj;
+export default class CamelScoreModels {
+  constructor(config) {
+    this.config = config;
   }
 
-  // Handle Date
-  if (obj instanceof Date) {
-    copy = new Date();
-    copy.setTime(obj.getTime());
-    return copy;
-  }
+  serialize(obj) {
+    let copy;
 
-  // Handle Array
-  if (obj instanceof Array) {
-    copy = [];
-    for (var i = 0, len = obj.length; i < len; i++) {
-      copy[i] = serialize(obj[i]);
+    // Handle the 3 simple types, and null or undefined
+    if (obj == null || typeof obj != "object") {
+      return obj;
     }
-    return copy;
-  }
 
-  // Handle Object
-  if (obj instanceof Object) {
-    copy = {};
-    for (let key in obj) {
-      if (!obj.hasOwnProperty(key)) continue;
-
-      let field, newKey;
-
-      if (config && config.fields && config.fields[key]) {
-        field = config.fields[key];
-      }
-
-      if (field && field.to) {
-        newKey = field.to;
-      } else {
-        newKey = key;
-      }
-
-      if (field && field.model) {
-        copy[newKey] = new field.model(obj[key]);
-      } else {
-        copy[newKey] = serialize(obj[key]);
-      }
+    // Handle Date
+    if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
     }
-    return copy;
+
+    // Handle Array
+    if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+        copy[i] = this.serialize(obj[i]);
+      }
+      return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+      copy = {};
+      for (let key in obj) {
+        if (!obj.hasOwnProperty(key)) continue;
+
+        let field, newKey;
+
+        if (this.config && this.config.fields && this.config.fields[key]) {
+          field = this.config.fields[key];
+        }
+
+        if (field && field.to) {
+          newKey = field.to;
+        } else {
+          newKey = key;
+        }
+
+        if (field && field.model && field.model instanceof CamelScoreModels) {
+          copy[newKey] = field.model.serialize(obj[key]);
+        } else {
+          copy[newKey] = this.serialize(obj[key]);
+        }
+      }
+      return copy;
+    }
   }
-};
+}

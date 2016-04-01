@@ -114,7 +114,7 @@ class Post extends CSM {
 
 
 
-var user = new User(responseBody);
+var user = User.serialize(responseBody);
 
 console.log('user result: ');
 console.log(user);

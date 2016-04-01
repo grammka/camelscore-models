@@ -5,7 +5,15 @@ var camelscore = require('camelscore');
 
 // abstract class with parsers
 class CamelScoreModels {
-  serialize(obj) {
+  constructor(props) {
+    this.config = null;
+  }
+
+  setConfig() {
+
+  }
+
+  static serialize(obj) {
     let copy;
 
     // Handle the 3 simple types, and null or undefined
