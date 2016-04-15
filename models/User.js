@@ -1,4 +1,4 @@
-import CSM from '../csm';
+import CSM from '../index';
 import Avatar from './Avatar'
 import Post from './Post'
 

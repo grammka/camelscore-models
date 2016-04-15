@@ -1,4 +1,4 @@
-import CSM from '../csm';
+import CSM from '../index';
 
 
 var Avatar = new CSM({

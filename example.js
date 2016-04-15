@@ -1,5 +1,8 @@
 "use strict";
 
+import User from './models/User';
+
+
 var responseBody = {
   user_id: 1,
   user_name: "Pavel",
@@ -26,95 +29,9 @@ var responseBody = {
   ],
 };
 
+var serialized = User.serialize(responseBody);
+var unserialized = User.unserialize(serialized);
 
-
-var CSM = require('./csm');
-
-class User extends CSM {
-  constructor(json) {
-    super();
-
-    this.config = {
-      fields: {
-        'user_id': {
-          to: 'id'
-        },
-        'user_name': {
-          to: 'name'
-        },
-        'user_avatar': {
-          to: 'avatar',
-          model: Avatar
-        },
-        'user_posts': {
-          to: 'posts',
-          model: Post
-        }
-      }
-    };
-
-    return this.serialize(json);
-  }
-}
-
-class Avatar extends CSM {
-  constructor(json) {
-    super();
-
-    this.config = {
-      fields: {
-        'preview_url': {
-          to: 'url'
-        },
-        'size': {
-          model: Size
-        }
-      }
-    };
-
-    return this.serialize(json);
-  }
-}
-
-class Size extends CSM {
-  constructor(json) {
-    super();
-
-    this.config = {
-      fields: {
-        'min_width': {
-          to: 'width'
-        },
-        'min_height': {
-          to: 'height'
-        }
-      }
-    };
-
-    return this.serialize(json);
-  }
-}
-
-class Post extends CSM {
-  constructor(json) {
-    super();
-
-    this.config = {
-      fields: {
-        'post_id': {
-          to: 'id'
-        },
-        'user_id': {
-          to: 'userId'
-        },
-      }
-    };
-  }
-}
-
-
-
-var user = User.serialize(responseBody);
-
-console.log('user result: ');
-console.log(user);
+console.log(serialized);
+console.log('---------------------------------------');
+console.log(unserialized);

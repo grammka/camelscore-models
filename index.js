@@ -1,164 +1,30 @@
-/*
+"use strict";
 
-/users/1 GET Response:
+export default class CamelScoreModels {
+  constructor(config) {
+    this._config = config;
+    this._reverseConfig = CamelScoreModels.reverseConfig(config);
 
-{
-  user_id: 1,
-  user_name: "Pasha",
-  user_design: {
-    avatar: {
-      user_id: 1,
-      url: "http://img.com/pasha.jpg",
-      min_width: 100,
-      mih_height: 100
-    }
+    this.config = this._config;
+    this.mode = 'serialize';
   }
-}
 
-Module transform:
+  static reverseConfig(config) {
+    let reverseConfig = {
+      fields: {}
+    };
 
-user_id                   =>  id
-user_name                 =>  name
-user_design               =>  design
-{design.avatar}.user_id   =>  userId
-min_width                 =>  minWidth
-min_height                =>  minHeight
-
-{
-  id: 1,
-  name: "Pasha",
-  design: {
-    avatar: {
-      userId: 1,
-      url: "http://image.url",
-      minWidth: 100,
-      mihHeight: 100
+    for (const field in config.fields) {
+      if (config.fields.hasOwnProperty(field)) {
+        const props = config.fields[field];
+        reverseConfig.fields[props.to] = Object.assign(props, { to: field });
+      }
     }
+
+    return reverseConfig;
   }
-}
 
-*/
-
-
-/*
-
-/users/1 PATCH Request body:
-
-{
-  id: 1,
-  name: "Vanya",
-  design: {
-    avatar: {
-      userId: 1,
-      url: "http://img.com/vanya.jpg",
-      minWidth: 200,
-      minHeight: 200
-    }
-  }
-}
-
-Module transform:
-
-id                =>  user_id
-name              =>  user_name
-design            =>  user_design
-userId            =>  user_id
-minWidth          =>  min_width
-minHeight         =>  min_height
-
-{
-  user_id: 1,
-  user_name: "Vanya",
-  user_design: {
-    avatar: {
-      user_id: 1,
-      url: "http://img.com/vanya.jpg",
-      min_width: 200,
-      min_height: 200
-    }
-  }
-}
-
-*/
-
-var model = {
-  camel: {
-    'user_id': 'id',
-    'user_name': 'name',
-    'user_design': 'design',
-    'user_design.avatar.user_id': 'userId',
-    'user_design.avatar.min_width': 'minWidth',
-    'user_design.avatar.min_height': 'minHeight',
-    'items.item_id': 'id',
-    'items.item_name': 'name',
-  },
-  under: {
-    'id': 'user_id',
-    'name': 'user_name',
-    'design': 'user_design',
-    'design.avatar.userId': 'user_id',
-    'design.avatar.minWidth': 'min_width',
-    'design.avatar.minHeight': 'min_height',
-    'items.id': 'item_id',
-    'items.name': 'item_name',
-  }
-};
-
-var under = {
-  user_id: 1,
-  user_name: "Vanya",
-  user_design: {
-    avatar: {
-      user_id: 1,
-      url: "http://img.com/vanya.jpg",
-      min_width: 200,
-      min_height: 200
-    }
-  },
-  items: [
-    {
-      item_id: 1,
-      item_name: 'Banana'
-    },
-    {
-      item_id: 2,
-      item_name: 'Apple'
-    }
-  ]
-};
-
-var camel = {
-  id: 1,
-  name: "Vanya",
-  design: {
-    avatar: {
-      userId: 1,
-      url: "http://img.com/vanya.jpg",
-      minWidth: 200,
-      minHeight: 200
-    }
-  },
-  items: [
-    {
-      id: 1,
-      name: 'Banana'
-    },
-    {
-      id: 2,
-      name: 'Apple'
-    }
-  ]
-};
-
-/**
- *
- * @param {object} data
- * @param {string} type - 'toCamel' or 'toUnder'
- */
-function convert(data, type) {
-  let serializer = model[type];
-
-  function iterate(obj, keyChunk) {
+  _perform(obj) {
     let copy;
 
     // Handle the 3 simple types, and null or undefined
@@ -177,35 +43,50 @@ function convert(data, type) {
     if (obj instanceof Array) {
       copy = [];
       for (var i = 0, len = obj.length; i < len; i++) {
-        let keyChain = keyChunk || '';
-        copy[i] = iterate(obj[i], keyChain);
+        copy[i] = this[this.mode](obj[i]);
       }
       return copy;
     }
 
+    // Handle Object
     if (obj instanceof Object) {
       copy = {};
       for (let key in obj) {
-        let keyChain = keyChunk || '';
+        if (!obj.hasOwnProperty(key)) continue;
 
-        if (obj.hasOwnProperty(key)) {
-          keyChain += (keyChain ? '.' : '') + key;
-          let newKey = serializer[keyChain] || key;
-          copy[newKey] = iterate(obj[key], keyChain);
+        let field, newKey;
+
+        if (this.config && this.config.fields && this.config.fields[key]) {
+          field = this.config.fields[key];
+        }
+
+        if (field && field.to) {
+          newKey = field.to;
+        } else {
+          newKey = key;
+        }
+
+        if (field && field.model && field.model instanceof CamelScoreModels) {
+          copy[newKey] = field.model[this.mode](obj[key]);
+        } else {
+          copy[newKey] = this._perform(obj[key]);
         }
       }
       return copy;
     }
   }
 
-  return iterate(data);
+  serialize(obj) {
+    this.config = this._config;
+    this.mode = 'serialize';
+
+    return this._perform(obj);
+  }
+
+  unserialize(obj) {
+    this.config = this._reverseConfig;
+    this.mode = 'unserialize';
+
+    return this._perform(obj);
+  }
 }
-
-
-
-
-
-
-exports = module.exports = {
-
-};
