@@ -1,12 +1,11 @@
 "use strict";
 
+import camelscore from 'camelscore';
+
 export default class CamelScoreModels {
   constructor(config) {
-    this._config = config;
-    this._reverseConfig = CamelScoreModels.reverseConfig(config);
-
-    this.config = this._config;
-    this.mode = 'serialize';
+    this.config = config;
+    this.r_config = CamelScoreModels.reverseConfig(config);
   }
 
   static reverseConfig(config) {
@@ -24,7 +23,7 @@ export default class CamelScoreModels {
     return reverseConfig;
   }
 
-  _perform(obj) {
+  serialize(obj) {
     let copy;
 
     // Handle the 3 simple types, and null or undefined
@@ -43,7 +42,7 @@ export default class CamelScoreModels {
     if (obj instanceof Array) {
       copy = [];
       for (var i = 0, len = obj.length; i < len; i++) {
-        copy[i] = this[this.mode](obj[i]);
+        copy[i] = this.serialize(obj[i]);
       }
       return copy;
     }
@@ -62,31 +61,73 @@ export default class CamelScoreModels {
 
         if (field && field.to) {
           newKey = field.to;
+        } else if (1) {
+          newKey = camelscore.camelCase(key);
         } else {
           newKey = key;
         }
 
         if (field && field.model && field.model instanceof CamelScoreModels) {
-          copy[newKey] = field.model[this.mode](obj[key]);
+          copy[newKey] = field.model.serialize(obj[key]);
         } else {
-          copy[newKey] = this._perform(obj[key]);
+          copy[newKey] = this.serialize(obj[key]);
         }
       }
       return copy;
     }
   }
 
-  serialize(obj) {
-    this.config = this._config;
-    this.mode = 'serialize';
-
-    return this._perform(obj);
-  }
-
   unserialize(obj) {
-    this.config = this._reverseConfig;
-    this.mode = 'unserialize';
+    let copy;
 
-    return this._perform(obj);
+    // Handle the 3 simple types, and null or undefined
+    if (obj == null || typeof obj != "object") {
+      return obj;
+    }
+
+    // Handle Date
+    if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+        copy[i] = this.unserialize(obj[i]);
+      }
+      return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+      copy = {};
+      for (let key in obj) {
+        if (!obj.hasOwnProperty(key)) continue;
+
+        let field, newKey;
+
+        if (this.r_config && this.r_config.fields && this.r_config.fields[key]) {
+          field = this.r_config.fields[key];
+        }
+
+        if (field && field.to) {
+          newKey = field.to;
+        } else if (1) {
+          newKey = camelscore.underscore(key);
+        } else {
+          newKey = key;
+        }
+
+        if (field && field.model && field.model instanceof CamelScoreModels) {
+          copy[newKey] = field.model.unserialize(obj[key]);
+        } else {
+          copy[newKey] = this.unserialize(obj[key]);
+        }
+      }
+      return copy;
+    }
   }
 }
