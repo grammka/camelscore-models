@@ -7,7 +7,7 @@ var responseBody = {
   user_id: 1,
   user_name: "Pavel",
   user_avatar: {
-    preview_url: "http://someurl.com/avatar.jpg",
+    preview_url: "http://site.com/avatar.jpg",
     size: {
       min_width: 100,
       min_height: 100
@@ -31,6 +31,7 @@ var responseBody = {
 
 var serialized = User.serialize(responseBody);
 var unserialized = User.unserialize(serialized);
+
 
 console.log('Serialized:\n');
 console.log(serialized);
