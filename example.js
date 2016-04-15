@@ -32,6 +32,8 @@ var responseBody = {
 var serialized = User.serialize(responseBody);
 var unserialized = User.unserialize(serialized);
 
+console.log('Serialized:\n');
 console.log(serialized);
-console.log('---------------------------------------');
+console.log(`\n`);
+console.log('Unserialized:\n');
 console.log(unserialized);

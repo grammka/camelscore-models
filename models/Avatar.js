@@ -3,7 +3,7 @@ import CSM from '../index';
 
 var Avatar = new CSM({
   fields: {
-    'size': {
+    size: {
       model: {
         'min_width': {
           to: 'width'
