@@ -1,14 +1,10 @@
 {
   "name": "camelscore-models",
+  "version": "0.0.2",
   "description": "Create models for fetch with converting under_score style strings to camelCase and the reverse, as well as on objects.",
-  "version": "0.0.0",
-  "author": "Ivanov Pavel <grammka@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/grammka/camelscore-models.git"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
+  "main": "./lib/index.js",
+  "directories": {
+    "example": "example"
   },
   "dependencies": {
     "camelscore": "^0.1.2"
@@ -20,5 +16,17 @@
   "scripts": {
     "build": "babel index.js -o lib/index.js"
   },
-  "main": "./lib/index"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grammka/camelscore-models.git"
+  },
+  "keywords": [
+    "camelscore"
+  ],
+  "author": "Ivanov Pavel <grammka@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grammka/camelscore-models/issues"
+  },
+  "homepage": "https://github.com/grammka/camelscore-models#readme"
 }
