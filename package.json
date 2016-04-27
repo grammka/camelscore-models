@@ -1,6 +1,6 @@
 {
   "name": "camelscore-models",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create models for fetch with converting under_score style strings to camelCase and the reverse, as well as on objects.",
   "main": "./lib/index.js",
   "scripts": {
