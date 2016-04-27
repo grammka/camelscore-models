@@ -18,7 +18,7 @@ export default class CamelScoreModels {
         const props = config.fields[field];
 
         if (props.to) {
-          reverseConfig.fields[props.to] = Object.assign({}, props, { to: field });
+          reverseConfig.fields[props.to] = { ...props, to: field };
         } else {
           reverseConfig.fields[field] = props;
         }
