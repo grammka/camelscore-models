@@ -4,8 +4,15 @@ import camelscore from 'camelscore';
 
 export default class CamelScoreModels {
   constructor(config) {
+    const defaultOptions = {
+      plugins: {
+        camelScore: true
+      }
+    };
+
     this.config = config;
     this.r_config = CamelScoreModels.reverseConfig(config);
+    this.options = { ...defaultOptions, ...(config.options || {}) };
   }
 
   static reverseConfig(config) {
@@ -66,7 +73,7 @@ export default class CamelScoreModels {
 
         if (field && field.to) {
           newKey = field.to;
-        } else if (1) {
+        } else if (this.options.plugins.camelScore) {
           newKey = camelscore.camelCase(key);
         } else {
           newKey = key;
@@ -120,7 +127,7 @@ export default class CamelScoreModels {
 
         if (field && field.to) {
           newKey = field.to;
-        } else if (1) {
+        } else if (this.options.plugins.camelScore) {
           newKey = camelscore.underscore(key);
         } else {
           newKey = key;

@@ -1,9 +1,9 @@
-import CSM from '../index';
+import CSM from '../../index';
 import Avatar from './Avatar'
 import Post from './Post'
 
 
-var User = new CSM({
+const User = new CSM({
   fields: {
     'user_id': {
       to: 'id'

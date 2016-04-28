@@ -1,7 +1,7 @@
-import CSM from '../index';
+import CSM from '../../index';
 
 
-var Post = new CSM({
+const Post = new CSM({
   fields: {
     'post_id': {
       to: 'id'

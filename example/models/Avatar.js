@@ -1,7 +1,7 @@
-import CSM from '../index';
+import CSM from '../../index';
 
 
-var Avatar = new CSM({
+const Avatar = new CSM({
   fields: {
     size: {
       model: {
