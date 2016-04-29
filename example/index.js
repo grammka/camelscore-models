@@ -17,14 +17,12 @@ var responseBody = {
     {
       post_id: 1, // id
       user_id: 1, // userId
-      text: "Hey, how are u?",
-      created: new Date(),
+      text: "Hey, how are u?"
     },
     {
       post_id: 2,
       user_id: 1,
-      text: "Hello! I'm fine",
-      created: new Date(),
+      text: "Hello! I'm fine"
     },
   ],
 };
