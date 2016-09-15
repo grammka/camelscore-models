@@ -2,8 +2,20 @@
 
 CamelScore-Models is a way to (un)serialize server Data.
 
-It helps you to convert `weird` data fields to something more `friendly`.
+It helps you to convert `weird` data fields from server to something more `friendly`.
 
+[![Npm Version](https://badge.fury.io/js/camelscore-models.svg)](https://www.npmjs.com/package/camelscore-models)
+[![Month Downloads](https://img.shields.io/npm/dm/camelscore-models.svg)](http://npm-stat.com/charts.html?package=camelscore-models)
+[![Npm Licence](https://img.shields.io/npm/l/camelscore-models.svg)](https://www.npmjs.com/package/camelscore-models)
+
+[![NPM](https://nodei.co/npm/camelscore-models.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/camelscore-models/)
+
+
+## Usage
+
+This library was created for using in React application uses Redux as store.
+In actions when data is fetching `serialize` method passed to convert income data and `unserialize` method passed to convert outcome data.
+There is converted data in store and components.
 
 
 ## Code Example
@@ -182,10 +194,3 @@ returns:
   }]
 }
 ```
-
-
-## Usage
-
-This library was created for using in React application uses Redux as store.
-In actions when data is fetching `serialize` method passed to convert income data and `unserialize` method passed to convert outcome data.
-There is converted data in store and components.
